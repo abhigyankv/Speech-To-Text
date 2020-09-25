@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
 
-function App() {
+export default function App() {
+  const [text, setText] = useState("");
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
+  recognition.interimResults = true;
+  function handleclick(e) {
+    e.preventDefault();
+    recognition.start();
+    var res = "";
+    recognition.onresult = function (e) {
+      res = e.results[0][0].transcript;
+      setText(text + " " + res);
+    };
+  }
+  function handleChange(event) {
+    setText(event.target.value);
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <button onClick={handleclick}>listen</button>
+      <textarea
+        id=""
+        name="setText"
+        col="30"
+        row="10"
+        value={text}
+        onChange={handleChange}
+      />
+      <h1>{text}</h1>
     </div>
   );
 }
-
-export default App;
